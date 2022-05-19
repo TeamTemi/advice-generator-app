@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from 'react';
+import "./css/layout.css";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import Quote from "./components/Quote";
+// import { ThemeProvider } from "styled-components";
+// import ThemeContext from "./contexts/ThemeContext";
+// import GlobalStyles from "../src/components/Styles/GlobalStyles"
 
-function App() {
+const App = () => {
+  const [getQuote, setGetQuote] = useState(null);
+
+  useEffect(() => {
+    axios.get("https://api.adviceslip.com/advice").then((res) => {
+      setGetQuote(res.data.slip);
+    });
+  }, []);
+
+  const newQuote =async () => {
+    const res = await axios.get("https://api.adviceslip.com/advice");
+    
+    setGetQuote(res.data.slip)
+  }
+
+  // const { theme } = useContext(ThemeContext);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    {/* <ThemeProvider theme={{ theme }}> */}
+      {/* <GlobalStyles />   */}
+      <Quote 
+      QuoteId={getQuote?.id} 
+      QuoteText={getQuote?.advice} 
+      activeQuote={newQuote} />
+    {/* </ThemeProvider> */}
     </div>
   );
-}
+};
 
 export default App;
